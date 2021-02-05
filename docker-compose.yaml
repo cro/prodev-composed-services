@@ -1,0 +1,35 @@
+version: '3.5'
+services:
+  app:
+    image: mo-compose-app:latest
+    build:
+      context: app/
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /Users/cro/src/mo/prodev-composed-services/app/data:/usr/src/app/data
+      - /Users/cro/src/mo/prodev-composed-services/app/src:/usr/src/app/src
+
+  ghi:
+    image: mo-compose-ghi:latest
+    build:
+      context: ghi/
+    ports:
+      - "8910:80"
+    volumes:
+      - /Users/cro/src/mo/prodev-composed-services/ghi/static:/usr/share/nginx/html
+
+  auth:
+    image: mo-compose-auth:latest
+    build:
+      context: auth/
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /Users/cro/src/mo/prodev-composed-services/auth/src:/usr/src/app/src
+    environment:
+      JWT_SECRET: dkveiqaetidasdoet
+      MONGODB_URL: mongodb://mongodb/prodev-composed-auth
+
+  mongodb:
+    image: mongo:4-bionic
+    volumes:
+      - /Users/cro/src/mo/prodev-composed-services/auth/data:/data/db
